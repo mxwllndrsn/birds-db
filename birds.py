@@ -6,10 +6,44 @@ with open(filename) as ebird:
 		r = line.strip().split("\t")
 		print(r[4], r[5], r[8], r[10], r[12], r[14], r[18])
 
-# Common name [4]
-# Scientific [5]
-# Count [8]
-# Age/Sex [10]
-# Country [11]
-# State [13]
-# Obs Date [18]
+
+'''
+5 data tables, 1 linking table 
+
+LINK:Sighting
+	Id 				INT
+	Date 			DATE
+	Time			TIME
+	BirdId			INT
+	LocationId		INT
+	ObserverId		INT
+
+Location
+	Id				INT
+	LocationName	VARCHAR
+	City			VARCHAR
+	County			VARCHAR
+	State			CHAR(2)
+
+Observer
+	Id				INT
+	ObserverFName	VARCHAR
+	ObserverLName	VARCHAR
+	Organization	VARCHAR
+
+Birds
+	Id				INT
+	CommonName		VARCHAR
+	Genus			VARCHAR
+	Species			VARCHAR
+	ConservationId	TINYINT
+	SeasonalityId	TINYINT
+
+Conservation
+	Id 					INT
+	ConservationStatus	VARCHAR
+
+Seasonality
+	Id 					INT
+	SeasonalityType		VARCHAR
+'''
