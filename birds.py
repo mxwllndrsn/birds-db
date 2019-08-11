@@ -1,12 +1,3 @@
-filename = "ebird_dataset.txt"
-
-k = 0
-with open(filename) as ebird:
-	for line in ebird.readlines():
-		r = line.strip().split("\t")
-		print(r[4], r[5], r[8], r[10], r[12], r[14], r[18])
-
-
 '''
 5 data tables, 1 linking table 
 
@@ -47,3 +38,49 @@ Seasonality
 	Id 					INT
 	SeasonalityType		VARCHAR
 '''
+
+class Table:
+	name = ""
+	fields = []
+		# fields [field1, field2, ...]
+	records = {}
+		# records dict {id: {field: data, field: data, ...}, id2: {field: data, field: data}, {...}}
+		# unique record dict created in add_record(self, data)
+
+	def __init__(self, name):
+		self.name = name
+
+	def print_name(self):
+		print(self.name)
+
+	def add_field(self, field_name):
+		self.fields[field_name] = ''
+
+	def add_record(self, data):
+		# data[] supplied in appropriate order
+		for key, item in zip(self.fields, data):
+			self.fields[key] = data
+			self.records[len(self.records)+1] = self.fields
+
+	def print_items(self, idx='all'):
+		if(idx!='all'):
+			print(self.records.get(idx))
+		else:
+			for key, val in self.records.iteritems():
+				print(key, val)
+
+			 
+location = Table('Location')
+location.print_name()
+
+location.add_field('City')
+location.add_record('Seattle')
+location.print_items(1)
+
+location.add_field('County')
+location.add_record('King')
+location.print_items(2)
+
+print
+print('all:')
+location.print_items()
