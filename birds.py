@@ -39,13 +39,23 @@ Seasonality
 	SeasonalityType		VARCHAR
 '''
 
+class Record:
+	info = {}
+
+	def __init__(self, fields, values):
+		for field, value in zip(fields, values):
+			self.info[field] = value
+
+	def get_record(self):
+		return self.info
+
 class Table:
-	name = ""
+	name = ''
 	fields = []
 		# fields [field1, field2, ...]
 	records = {}
 		# records dict {id: {field: data, field: data, ...}, id2: {field: data, field: data}, {...}}
-		# unique record dict created in add_record(self, data)
+		# unique record as dict created in add_record(self, data)
 
 	def __init__(self, name):
 		self.name = name
@@ -54,33 +64,41 @@ class Table:
 		print(self.name)
 
 	def add_field(self, field_name):
-		self.fields[field_name] = ''
+		self.fields.append(field_name)
 
 	def add_record(self, data):
 		# data[] supplied in appropriate order
-		for key, item in zip(self.fields, data):
-			self.fields[key] = data
-			self.records[len(self.records)+1] = self.fields
-
+		self.records[len(self.records)] = Record(self.fields, data)
+			
 	def print_items(self, idx='all'):
-		if(idx!='all'):
-			print(self.records.get(idx))
-		else:
-			for key, val in self.records.iteritems():
-				print(key, val)
+		#if(idx!='all'):
+		#	print(self.records.get(idx).get_record())
+		#else:
+			for key, val in self.records.items():
+				print(key, val.get_record())
 
 			 
 location = Table('Location')
-location.print_name()
+print('name:', location.name)
 
 location.add_field('City')
-location.add_record('Seattle')
+location.add_field('County')
+location.add_field('State')
+location.add_record(['Seattle', '', ''])
+location.print_items(0)
+
+location.add_record(['', 'King', ''])
 location.print_items(1)
 
-location.add_field('County')
-location.add_record('King')
+location.add_record(['', '', 'WA'])
 location.print_items(2)
+location.add_record(['', '', 'MI'])
+location.print_items(3)
+location.add_record(['', '', 'OR'])
+location.print_items(4)
 
-print
+location.add_record(['Tukwila','King', 'WA'])
+
+print()
 print('all:')
 location.print_items()
