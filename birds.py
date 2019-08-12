@@ -75,28 +75,13 @@ class Table:
 			for key, val in self.records.items():
 				print(key, val.get_record())
 
+
+def Create_Table(name, fields):
+	table = Table(name)
+	for field in fields:
+		table.add_field(field)
+	return table
 			 
-location = Table('Location')
-print('name:', location.name)
-
-location.add_field('City')
-location.add_field('County')
-location.add_field('State')
-location.add_record(['Seattle', '', ''])
-location.print_items(0)
-
-location.add_record(['', 'King', ''])
-location.print_items(1)
-
-location.add_record(['', '', 'WA'])
-location.print_items(2)
-location.add_record(['', '', 'MI'])
-location.print_items(3)
-location.add_record(['', '', 'OR'])
-location.print_items(4)
-
-location.add_record(['Tukwila','King', 'WA'])
-
-print()
-print('all:')
+location = Create_Table('location', ['LocationName','City','County','State'])
+location.add_record(['North Seattle College', 'Seattle', 'King', 'WA'])
 location.print_items()
