@@ -35,9 +35,9 @@ INDICES (after acquisition)
 
 '''
 
-# table specific lists
-seasonality_types = ['Year-round', 'Breeding', 'Winter', 'Migration']
-conservation_types = ['Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered']
+# table specific lists (not included in dataset)
+seasonality_types = [['Year-round'], ['Breeding'], ['Winter'], ['Migration']]
+conservation_types = [['Least Concern'], ['Near Threatened'], ['Vulnerable'], ['Endangered'], ['Critically Endangered']]
 
 # input data
 filename = "data/ebird_dataset.txt"
@@ -73,10 +73,16 @@ sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'Ob
 Create_Records(location, data, [5, 4, 4, 3])
 
 # remove duplicate entries and assign ID
-Create_Records(birds, data, [0, 1, 2])
+bird_filter = []
+for i in range(0, len(data)):
+	if(data[i-1][0] != data[i][0]):
+		bird_filter.append(data[i])
 
-# remove duplicate entries and assign ID
-Create_Records(observer, data, [9])
+Create_Records(birds, bird_filter, [0, 1, 2])
 
-Create_Records(seasonality, seasonality_types, [0, 1, 2, 3])
-Create_Records(conservation, conservation_types, [0, 1, 2, 3, 4])
+Create_Records(observer, observer_filter, [9])
+Create_Records(seasonality, seasonality_types, [0])
+Create_Records(conservation, conservation_types, [0])
+
+birds.print_records()
+observer.print_records()
