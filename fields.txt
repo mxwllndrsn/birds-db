@@ -1,4 +1,3 @@
-0 {'LocationName': 'North Seattle College', 'City': 'Seattle', 'County': 'King', 'State': 'WA'}
 0 GLOBAL UNIQUE IDENTIFIER
 1 LAST EDITED DATE
 2 TAXONOMIC ORDER
@@ -45,5 +44,4 @@ SUBSPECIES SCIENTIFIC NAME
 43 REASON
 44 TRIP COMMENTS
 45 SPECIES COMMENTS
-46 
 

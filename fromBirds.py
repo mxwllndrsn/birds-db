@@ -20,43 +20,63 @@ location
 	county
 	state
 
-INDICES
+INDICES (after acquisition)
 
-  4 COMMON NAME
-  5 SCIENTIFIC NAME .split(' ') species/genus
- 14 STATE
- 15 STATE CODE [:-2]
- 16 COUNTY
- 22 LOCALITY
- 27 OBSERVATION DATE
- 28 TIME OBSERVATIONS STARTED
- 29 OBSERVER ID
+  0 COMMON NAME
+  1 SCIENTIFIC NAME .split(' ') species
+  2 SCIENTIFIC NAME .split(' ') genus
+  3 STATE
+  4 STATE CODE [:-2]
+  5 COUNTY
+  6 LOCALITY
+  7 OBSERVATION DATE
+  8 TIME OBSERVATIONS STARTED
+  9 OBSERVER ID
 
 '''
 
+# table specific lists
+seasonality_types = ['Year-round', 'Breeding', 'Winter', 'Migration']
+conservation_types = ['Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered']
+
+# input data
 filename = "data/ebird_dataset.txt"
-have = []
-with open(filename) as data:
-	next(data) #skip header
-	for line in data:
+data = []
+
+with open(filename) as ebird:
+	next(ebird) #skip header
+	for line in ebird:
 		try:
-			row = next(data).split('\t')
+			row = next(ebird).split('\t')
 		except:
 			pass
 		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28], row[29]]
-		have.append(want)
 
-for item, num in enumerate(have, 0):
-	print(item, num)
+		#[-2:] slice state abbrev from "US-WA"
+		want.insert(3, want.pop(3)[-2:])
+		#.split(' ') species / genus from SCIENTIFIC NAME
+		sci_name = want.pop(1)
+		want.insert(1, sci_name.split(' ')[1])
+		want.insert(2, sci_name.split(' ')[0])
+
+		data.append(want)
 
 
 location = Create_Table('Location', ['LocationName','City','County','State'])
-bird = Create_Table('Birds', ['CommonName','Genus','Species','ConservationId', 'SeasonalityId'])
+birds = Create_Table('Birds', ['CommonName','Genus','Species','ConservationId', 'SeasonalityId'])
 observer = Create_Table('Observer', ['ObserverFName', 'ObserverLName', 'Organization'])
 conservation = Create_Table('Conservation', ['ConservationStatus'])
 seasonality = Create_Table('Seasonality', ['Seasonality'])
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 
 
+Create_Records(location, data, [5, 4, 4, 3])
 
+# remove duplicate entries and assign ID
+Create_Records(birds, data, [0, 1, 2])
 
+# remove duplicate entries and assign ID
+Create_Records(observer, data, [9])
+
+Create_Records(seasonality, seasonality_types, [0, 1, 2, 3])
+Create_Records(conservation, conservation_types, [0, 1, 2, 3, 4])

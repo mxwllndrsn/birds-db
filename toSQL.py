@@ -40,24 +40,22 @@ Seasonality
 '''
 
 class Record:
-	info = {}
 
 	def __init__(self, fields, values):
 		self.info = dict(zip(fields, values))
 	def get_record(self):
 		return self.info
 
+
 class Table:
-	name = ''
-	fields = []
-		# fields [field1, field2, ...]
-	records = {}
-		# records dict {id: {field: data, field: data, ...}, id2: {field: data, field: data}, {...}}
-		# unique record as dict created in add_record(self, data)
 
 	def __init__(self, name):
 		self.name = name
-
+		self.records = {}
+		self.fields = []
+		# fields [field1, field2, ...]
+		# records dict {id: {field: data, field: data, ...}, id2: {field: data, field: data}, {...}}
+		# unique record as dict created in add_record(self, data)
 	def print_name(self):
 		print(self.name)
 
@@ -65,10 +63,9 @@ class Table:
 		self.fields.append(field_name)
 
 	def add_record(self, data):
-		# data[] supplied in appropriate order
 		self.records[len(self.records)] = Record(self.fields, data)
 			
-	def print_items(self, idx='all'):
+	def print_records(self, idx='all'):
 		if(idx!='all'):
 			print(self.records.get(idx).get_record())
 		else:
@@ -81,3 +78,8 @@ def Create_Table(name, fields):
 	for field in fields:
 		table.add_field(field)
 	return table
+
+
+def Create_Records(table, data, indices):
+	for row in data:
+		table.add_record([row[i] for i in indices])
