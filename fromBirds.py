@@ -1,4 +1,5 @@
 from toSQL import *
+import makeObservers
 
 ''' eBird dataset description
 
@@ -35,10 +36,6 @@ INDICES (after acquisition)
 
 '''
 
-# table specific lists (not included in dataset)
-seasonality_types = [['Year-round'], ['Breeding'], ['Winter'], ['Migration']]
-conservation_types = [['Least Concern'], ['Near Threatened'], ['Vulnerable'], ['Endangered'], ['Critically Endangered']]
-
 # input data
 filename = "data/ebird_dataset.txt"
 data = []
@@ -50,7 +47,7 @@ with open(filename) as ebird:
 			row = next(ebird).split('\t')
 		except:
 			pass
-		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28], row[29]]
+		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28]]
 
 		#[-2:] slice state abbrev from "US-WA"
 		want.insert(3, want.pop(3)[-2:])
@@ -69,20 +66,22 @@ conservation = Create_Table('Conservation', ['ConservationStatus'])
 seasonality = Create_Table('Seasonality', ['Seasonality'])
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 
-
-Create_Records(location, data, [5, 4, 4, 3])
-
 # remove duplicate entries and assign ID
 bird_filter = []
 for i in range(0, len(data)):
 	if(data[i-1][0] != data[i][0]):
 		bird_filter.append(data[i])
 
-Create_Records(birds, bird_filter, [0, 1, 2])
+# generate observer data
+observers = makeObservers.Create_Observers()
 
-Create_Records(observer, observer_filter, [9])
+# table specific lists (not included in dataset)
+seasonality_types = [['Year-round'], ['Breeding'], ['Winter'], ['Migration']]
+conservation_types = [['Least Concern'], ['Near Threatened'], ['Vulnerable'], ['Endangered'], ['Critically Endangered']]
+
+
+Create_Records(location, data, [5, 4, 4, 3])
+Create_Records(birds, bird_filter, [0, 1, 2])
+Create_Records(observer, observers, [0, 1, 2])
 Create_Records(seasonality, seasonality_types, [0])
 Create_Records(conservation, conservation_types, [0])
-
-birds.print_records()
-observer.print_records()
