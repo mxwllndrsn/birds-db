@@ -43,9 +43,7 @@ class Record:
 	info = {}
 
 	def __init__(self, fields, values):
-		for field, value in zip(fields, values):
-			self.info[field] = value
-
+		self.info = dict(zip(fields, values))
 	def get_record(self):
 		return self.info
 
@@ -71,9 +69,9 @@ class Table:
 		self.records[len(self.records)] = Record(self.fields, data)
 			
 	def print_items(self, idx='all'):
-		#if(idx!='all'):
-		#	print(self.records.get(idx).get_record())
-		#else:
+		if(idx!='all'):
+			print(self.records.get(idx).get_record())
+		else:
 			for key, val in self.records.items():
 				print(key, val.get_record())
 
