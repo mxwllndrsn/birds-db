@@ -7,4 +7,6 @@ A sample MySQL database utilizing [eBird](http://www.ebird.org) dataset, populat
 
 Associate credit: Jennifer Casper, Florence Williams - *EER, DB Design, SQL Scripts*. 
 
+*Holy spaghetti code batman, some cleanup is needed.*
+
 #### Python 3.6.8
