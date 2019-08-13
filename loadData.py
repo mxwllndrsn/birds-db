@@ -1,5 +1,5 @@
 from toSQL import *
-from makeArbitrary import *
+from dataHandles import *
 
 ''' eBird dataset description
 
@@ -38,33 +38,14 @@ INDICES (after acquisition)
 
 # input data
 filename = "data/ebird_dataset.txt"
-data = []
-
-with open(filename) as ebird:
-	next(ebird) #skip header
-	for line in ebird:
-		try:
-			row = next(ebird).split('\t')
-		except:
-			pass
-		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28], row[29]]
-
-		#[-2:] slice state abbrev from "US-WA"
-		want.insert(3, want.pop(3)[-2:])
-		#.split(' ') species / genus from SCIENTIFIC NAME
-		sci_name = want.pop(1)
-		want.insert(1, sci_name.split(' ')[1])
-		want.insert(2, sci_name.split(' ')[0])
-
-		data.append(want)
-
-
+data = Get_Data(filename)
 
 # 20 total unique observers
 '''for i, obs in enumerate(unique_observer):
 	print(i, obs)'''
 
 # create tables
+sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 location = Create_Table('Location', ['LocationName','City','County','State'])
 birds = Create_Table('Birds', ['CommonName','Genus','Species','ConservationId', 'SeasonalityId'])
 observer = Create_Table('Observer', ['ObserverFName', 'ObserverLName', 'Organization'])
@@ -72,22 +53,26 @@ conservation = Create_Table('Conservation', ['ConservationStatus'])
 seasonality = Create_Table('Seasonality', ['Seasonality'])
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 
-# fix some things
-# birds_are_ready = Bird_Filter_Append(data)
+# lists for records
 linking = Create_Linking(data)
-observers = Create_Observers(linking)
+u_birds = Unique_Birds(data)
+u_locations = Unique_Locations(linking, data)
+u_observers = Unique_Observers(linking)
 seasonality_types = Create_Seasonality()
 conservation_types = Create_Conservation()
 
-#Bird_Sighting_Indexes(data, birds_are_ready)
-
-'''update linking indices here after base table transforms'''
+# sort links 
+linking = Corroborate_Links(linking, stripped(u_birds, 0), stripped(u_locations, 0), stripped(u_observers, 3))
 
 # create records
-Create_Records(location, data, [5, 4, 4, 3])
-#Create_Records(birds, birds_are_ready, [0, 1, 2, 9, 10])
-Create_Records(observer, observers, [1, 2, 3])
+Create_Records(location, u_locations, [0, 1, 2, 3])
+Create_Records(birds, u_birds, [0, 1, 2, 3, 4])
+Create_Records(observer, u_observers, [0, 1, 2])
 Create_Records(seasonality, seasonality_types, [0])
 Create_Records(conservation, conservation_types, [0])
+Create_Records(sighting, linking, [1, 2, 3, 4, 5])
 
+'''birds.print_records()
 observer.print_records()
+location.print_records()'''
+sighting.print_records()
