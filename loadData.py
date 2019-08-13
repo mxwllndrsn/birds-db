@@ -1,3 +1,4 @@
+import os
 from toSQL import *
 from dataHandles import *
 
@@ -36,9 +37,11 @@ INDICES (after acquisition)
 
 '''
 
-# input data
-filename = "data/ebird_dataset.txt"
-data = Get_Data(filename)
+# io data
+infile = os.path.join('data', 'ebird_dataset.txt')
+outfile = os.path.join('sql', 'birds_data')
+
+data = Get_Data(infile)
 
 # create tables
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
@@ -76,4 +79,4 @@ sql_out += Write_SQL(birds)
 sql_out += Write_SQL(observer)
 sql_out += Write_SQL(sighting)
 
-Export_SQL(sql_out, 'birds_data')
+Export_SQL(sql_out, outfile)
