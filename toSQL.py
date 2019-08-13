@@ -104,4 +104,6 @@ def Write_SQL(table):
 
 def Export_SQL(sql, filename):
 	with open(filename+'.sql', 'w') as fout:
+		fout.write('SET FOREIGN_KEY_CHECKS = 0;\n')
 		fout.write(sql)
+		fout.write('SET FOREIGN_KEY_CHECKS = 1;\n')

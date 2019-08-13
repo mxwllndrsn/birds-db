@@ -70,10 +70,9 @@ Create_Records(sighting, linking, [1, 2, 3, 4, 5])
 
 # write sql 
 sql_out = Write_SQL(conservation)
-sql_out += Write_SQL(birds)
 sql_out += Write_SQL(seasonality)
 sql_out += Write_SQL(location)
-
+sql_out += Write_SQL(birds)
 sql_out += Write_SQL(observer)
 sql_out += Write_SQL(sighting)
 
