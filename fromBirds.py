@@ -47,7 +47,7 @@ with open(filename) as ebird:
 			row = next(ebird).split('\t')
 		except:
 			pass
-		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28]]
+		want = [row[4], row[5], row[14], row[15], row[16], row[22], row[27], row[28], row[29]]
 
 		#[-2:] slice state abbrev from "US-WA"
 		want.insert(3, want.pop(3)[-2:])
@@ -58,6 +58,12 @@ with open(filename) as ebird:
 
 		data.append(want)
 
+
+
+# 20 total unique observers
+'''for i, obs in enumerate(unique_observer):
+	print(i, obs)'''
+
 # create tables
 location = Create_Table('Location', ['LocationName','City','County','State'])
 birds = Create_Table('Birds', ['CommonName','Genus','Species','ConservationId', 'SeasonalityId'])
@@ -67,16 +73,21 @@ seasonality = Create_Table('Seasonality', ['Seasonality'])
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 
 # fix some things
-birds_are_ready = Bird_Filter_Append(data)
-observers = Create_Observers()
+# birds_are_ready = Bird_Filter_Append(data)
+linking = Create_Linking(data)
+observers = Create_Observers(linking)
 seasonality_types = Create_Seasonality()
 conservation_types = Create_Conservation()
 
-Bird_Sighting_Indexes(data, birds_are_ready)
+#Bird_Sighting_Indexes(data, birds_are_ready)
+
+'''update linking indices here after base table transforms'''
 
 # create records
 Create_Records(location, data, [5, 4, 4, 3])
-Create_Records(birds, birds_are_ready, [0, 1, 2, 9, 10])
-Create_Records(observer, observers, [0, 1, 2])
+#Create_Records(birds, birds_are_ready, [0, 1, 2, 9, 10])
+Create_Records(observer, observers, [1, 2, 3])
 Create_Records(seasonality, seasonality_types, [0])
 Create_Records(conservation, conservation_types, [0])
+
+observer.print_records()
