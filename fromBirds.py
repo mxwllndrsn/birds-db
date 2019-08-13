@@ -1,5 +1,5 @@
 from toSQL import *
-import makeObservers
+from makeArbitrary import *
 
 ''' eBird dataset description
 
@@ -58,7 +58,7 @@ with open(filename) as ebird:
 
 		data.append(want)
 
-
+# create tables
 location = Create_Table('Location', ['LocationName','City','County','State'])
 birds = Create_Table('Birds', ['CommonName','Genus','Species','ConservationId', 'SeasonalityId'])
 observer = Create_Table('Observer', ['ObserverFName', 'ObserverLName', 'Organization'])
@@ -66,22 +66,17 @@ conservation = Create_Table('Conservation', ['ConservationStatus'])
 seasonality = Create_Table('Seasonality', ['Seasonality'])
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 
-# remove duplicate entries and assign ID
-bird_filter = []
-for i in range(0, len(data)):
-	if(data[i-1][0] != data[i][0]):
-		bird_filter.append(data[i])
+# fix some things
+birds_are_ready = Bird_Filter_Append(data)
+observers = Create_Observers()
+seasonality_types = Create_Seasonality()
+conservation_types = Create_Conservation()
 
-# generate observer data
-observers = makeObservers.Create_Observers()
+Bird_Sighting_Indexes(data, birds_are_ready)
 
-# table specific lists (not included in dataset)
-seasonality_types = [['Year-round'], ['Breeding'], ['Winter'], ['Migration']]
-conservation_types = [['Least Concern'], ['Near Threatened'], ['Vulnerable'], ['Endangered'], ['Critically Endangered']]
-
-
+# create records
 Create_Records(location, data, [5, 4, 4, 3])
-Create_Records(birds, bird_filter, [0, 1, 2])
+Create_Records(birds, birds_are_ready, [0, 1, 2, 9, 10])
 Create_Records(observer, observers, [0, 1, 2])
 Create_Records(seasonality, seasonality_types, [0])
 Create_Records(conservation, conservation_types, [0])
