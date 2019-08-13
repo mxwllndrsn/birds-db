@@ -89,10 +89,12 @@ def Write_SQL(table):
 	sql_str = 'SET AUTOCOMMIT=0;\nINSERT INTO {0} VALUES\n'.format(table.name)
 	for i in range(0, len(table.records)):
 		sql_str += '('
-		sql_str += str(i)+', '
+		sql_str += str(i+1)+', '
 		
 		for field in table.fields:
-			sql_str += str(table.records[i].get_record()[field])+', '
+			clean_str = str(table.records[i].get_record()[field]).replace("'", "")
+			clean_str = clean_str.split(',')[0]
+			sql_str += '\''+clean_str+'\', '
 		
 		sql_str = sql_str[:-2] +'),\n'
 	sql_str = sql_str[:-2]+ ';\nCOMMIT;\n'

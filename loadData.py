@@ -40,10 +40,6 @@ INDICES (after acquisition)
 filename = "data/ebird_dataset.txt"
 data = Get_Data(filename)
 
-# 20 total unique observers
-'''for i, obs in enumerate(unique_observer):
-	print(i, obs)'''
-
 # create tables
 sighting = Create_Table('Sighting', ['Date', 'Time', 'BirdId', 'LocationId', 'ObserverId'])
 location = Create_Table('Location', ['LocationName','City','County','State'])
@@ -72,14 +68,12 @@ Create_Records(seasonality, seasonality_types, [0])
 Create_Records(conservation, conservation_types, [0])
 Create_Records(sighting, linking, [1, 2, 3, 4, 5])
 
-'''birds.print_records()
-observer.print_records()
-location.print_records()'''
-sql_out = Write_SQL(sighting)
+# write sql 
+sql_out = Write_SQL(conservation)
+sql_out += Write_SQL(seasonality)
 sql_out += Write_SQL(location)
 sql_out += Write_SQL(birds)
 sql_out += Write_SQL(observer)
-sql_out += Write_SQL(conservation)
-sql_out += Write_SQL(seasonality)
+sql_out += Write_SQL(sighting)
 
 Export_SQL(sql_out, 'birds_data')
