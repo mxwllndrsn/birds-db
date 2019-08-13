@@ -83,3 +83,23 @@ def Create_Table(name, fields):
 def Create_Records(table, data, indices):
 	for row in data:
 		table.add_record([row[i] for i in indices])
+
+
+def Write_SQL(table):
+	sql_str = 'SET AUTOCOMMIT=0;\nINSERT INTO {0} VALUES\n'.format(table.name)
+	for i in range(0, len(table.records)):
+		sql_str += '('
+		sql_str += str(i)+', '
+		
+		for field in table.fields:
+			sql_str += str(table.records[i].get_record()[field])+', '
+		
+		sql_str = sql_str[:-2] +'),\n'
+	sql_str = sql_str[:-2]+ ';\nCOMMIT;\n'
+
+	return sql_str
+
+
+def Export_SQL(sql, filename):
+	with open(filename+'.sql', 'w') as fout:
+		fout.write(sql)

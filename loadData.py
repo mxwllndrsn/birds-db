@@ -75,4 +75,11 @@ Create_Records(sighting, linking, [1, 2, 3, 4, 5])
 '''birds.print_records()
 observer.print_records()
 location.print_records()'''
-sighting.print_records()
+sql_out = Write_SQL(sighting)
+sql_out += Write_SQL(location)
+sql_out += Write_SQL(birds)
+sql_out += Write_SQL(observer)
+sql_out += Write_SQL(conservation)
+sql_out += Write_SQL(seasonality)
+
+Export_SQL(sql_out, 'birds_data')
