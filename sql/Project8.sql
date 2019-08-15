@@ -1,3 +1,5 @@
+
+
 DROP DATABASE IF EXISTS Bird;
 CREATE DATABASE Bird;
 USE Bird;
@@ -30,16 +32,16 @@ CREATE TABLE Bird.Conservation	(
 CREATE TABLE Bird.Birds		(
 	BirdId			INT 			NOT NULL,
     CommonName		VARCHAR(45)		NOT NULL,
+	Species			VARCHAR(30)		NOT NULL,
     Genus			VARCHAR(30)		NOT NULL,
-    Species			VARCHAR(30)		NOT NULL,
     ConservationId	TINYINT			NOT NULL,
     SeasonalityId	TINYINT			NOT NULL,
 		CONSTRAINT		Bird_BirdId_pk			PRIMARY KEY (BirdId),
         CONSTRAINT 		Bird_ConservationId_fk	FOREIGN KEY (ConservationId)
 			REFERENCES 	Conservation (ConservationId)
             ON DELETE RESTRICT,
-		CONSTRAINT		Bird_SeasonalityId_fk	FOREIGN KEY (SeasonalityId)
-			REFERENCES	Seasonality (SeasonalityId)
+		CONSTRAINT		Bird_SeasonalityId_fk	FOREIGN KEY (Seasonalityid)
+			REFERENCES	seasonality (Seasonalityid)
             ON DELETE RESTRICT
             );
 
